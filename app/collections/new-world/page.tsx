@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { LuminaInteractiveList, type LuminaSlide } from "@/components/ui/lumina-interactive-list";
 
 // Crimson/plasma effect — raw, disruptive energy
@@ -22,7 +23,7 @@ const SLIDES: LuminaSlide[] = [
 export default function NewWorldPage() {
   return (
     <div style={{ height: "100svh", width: "100vw", position: "relative" }}>
-      <a href="/" className="chimera-back">← CHIMERA</a>
+      <Link href="/" className="chimera-back">← CHIMERA</Link>
       <LuminaInteractiveList
         slides={SLIDES}
         effect="plasma"

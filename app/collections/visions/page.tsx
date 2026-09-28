@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { LuminaInteractiveList, type LuminaSlide } from "@/components/ui/lumina-interactive-list";
 
 // Timeshift effect — surreal, glitchy, artistic
@@ -15,7 +16,7 @@ const SLIDES: LuminaSlide[] = [
 export default function VisionsPage() {
   return (
     <div style={{ height: "100svh", width: "100vw", position: "relative" }}>
-      <a href="/" className="chimera-back">← CHIMERA</a>
+      <Link href="/" className="chimera-back">← CHIMERA</Link>
       <LuminaInteractiveList
         slides={SLIDES}
         effect="timeshift"

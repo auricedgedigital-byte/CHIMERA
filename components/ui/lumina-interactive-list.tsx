@@ -51,7 +51,7 @@ export function LuminaInteractiveList({
       let currentSlideIndex = 0;
       let isTransitioning = false;
       let shaderMaterial: any, renderer: any, scene: any, camera: any;
-      let slideTextures: any[] = [];
+      const slideTextures: any[] = [];
       let texturesLoaded = false;
       let autoSlideTimer: any = null;
       let progressAnimation: any = null;
@@ -308,19 +308,36 @@ export function LuminaInteractiveList({
           catch { console.warn('Texture failed:', s.media); }
         }
 
+        if (slideTextures.length === 1) {
+          slideTextures.push(slideTextures[0]);
+        }
+
         if (slideTextures.length >= 2) {
           shaderMaterial.uniforms.uTexture1.value = slideTextures[0];
           shaderMaterial.uniforms.uTexture2.value = slideTextures[1];
           shaderMaterial.uniforms.uTexture1Size.value = slideTextures[0].userData.size;
           shaderMaterial.uniforms.uTexture2Size.value = slideTextures[1].userData.size;
           texturesLoaded = true;
-          sliderEnabled = true;
+          sliderEnabled = slides.length > 1;
           document.querySelector('.lm-wrapper')?.classList.add('loaded');
-          startTimer(600);
+          if (sliderEnabled) {
+            startTimer(600);
+          }
         }
 
-        const render = () => { requestAnimationFrame(render); renderer.render(scene, camera); };
+        let animFrameId: number;
+        const render = () => {
+          if (destroyed) return;
+          animFrameId = requestAnimationFrame(render);
+          renderer.render(scene, camera);
+        };
         render();
+
+        cleanupFns.push(() => {
+          cancelAnimationFrame(animFrameId);
+          stopTimer();
+          renderer?.dispose();
+        });
       };
 
       buildNav();
@@ -342,25 +359,35 @@ export function LuminaInteractiveList({
 
       initRenderer();
 
-      window.addEventListener('resize', () => {
-        if (renderer) {
+      const handleResize = () => {
+        if (renderer && shaderMaterial) {
           renderer.setSize(window.innerWidth, window.innerHeight);
           shaderMaterial.uniforms.uResolution.value.set(window.innerWidth, window.innerHeight);
         }
-      });
+      };
+      window.addEventListener('resize', handleResize);
+      cleanupFns.push(() => window.removeEventListener('resize', handleResize));
     };
+
+    let destroyed = false;
+    const cleanupFns: (() => void)[] = [];
 
     (async () => {
       try {
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js', 'gsap');
         await loadScript('https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js', 'THREE');
-        initApplication();
+        if (!destroyed) {
+          initApplication();
+        }
       } catch (e) {
         console.error('Failed to load animation scripts', e);
       }
     })();
 
-    return () => {};
+    return () => {
+      destroyed = true;
+      cleanupFns.forEach((fn) => fn());
+    };
   }, [slides, effect]);
 
   return (
