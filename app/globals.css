@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Chimera Design Tokens ─────────────────────────────── */
+:root {
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "Space Grotesk", sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", monospace;
+
+  --color-bg: #080808;
+  --color-text: #f0ede8;
+  --color-text-muted: rgba(240, 237, 232, 0.55);
+  --color-accent: #c4a265;
+  --color-burgundy: #6b1a1a;
+
+  --collection-new-world: #6b1a1a;
+  --collection-classics: #1a1a1a;
+  --collection-visions: #1e1030;
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+/* ─── Lumina WebGL Slider ────────────────────────────────── */
+.lm-wrapper {
+  position: fixed;
+  inset: 0;
+  background: #080808;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+  font-family: var(--font-body);
+  color: #fff;
+}
+.lm-wrapper.loaded { opacity: 1; }
+
+.lm-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.lm-content {
+  position: absolute;
+  bottom: 12vh;
+  left: 4vw;
+  max-width: min(480px, 90vw);
+  z-index: 10;
+}
+
+.lm-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 7vw, 5.5rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: #fff;
+  margin-bottom: 1rem;
+}
+
+.lm-desc {
+  font-family: var(--font-body);
+  font-size: clamp(0.8rem, 1.4vw, 1rem);
+  color: rgba(255,255,255,0.65);
+  letter-spacing: 0.02em;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.lm-purchase {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.lm-price {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  color: var(--color-accent);
+  letter-spacing: 0.04em;
+}
+
+.lm-buy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+  padding: 0.65rem 1.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+.lm-buy-btn:hover {
+  border-color: #fff;
+  background: #fff;
+  color: #000;
+}
+
+.lm-counter {
+  position: absolute;
+  top: 2.5vh;
+  right: 3vw;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  letter-spacing: 0.1em;
+}
+.lm-sep {
+  width: 24px;
+  height: 1px;
+  background: rgba(255,255,255,0.3);
+}
+
+/* ─── Lumina Side Navigation ────────────────────────────── */
+.lm-nav {
+  position: absolute;
+  right: 3vw;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.lm-nav-item {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+.lm-nav-item.active { opacity: 1; }
+.lm-nav-item:hover { opacity: 0.8; }
+
+.lm-progress-line {
+  width: 28px;
+  height: 1px;
+  background: rgba(255,255,255,0.25);
+  position: relative;
+  overflow: hidden;
+}
+.lm-progress-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 0%;
+  background: #fff;
+  opacity: 0;
+  transition: width 0.1s linear, opacity 0.3s ease;
+}
+.lm-nav-item.active .lm-progress-line { background: rgba(255,255,255,0.5); }
+
+.lm-nav-title {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #fff;
+  white-space: nowrap;
+}
+
+/* ─── Back link ─────────────────────────────────────────── */
+.chimera-back {
+  position: absolute;
+  top: 2.5vh;
+  left: 3vw;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.chimera-back:hover { color: #fff; }
+
+/* ─── Scrollbar ─────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 2px; }
